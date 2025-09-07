@@ -4,8 +4,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchNoteById } from '@/lib/api';
-
+import { fetchNoteById } from '@/lib/api/clientApi';
 
 import css from './NoteDetails.module.css';
 
@@ -22,13 +21,15 @@ const NoteDetailsClient = () => {
     refetchOnMount: false,
   });
 
-  const router  = useRouter()
+  const router = useRouter();
 
   if (isLoading) return <p>Loading...</p>;
 
   if (error || !note) return <p>Some error..</p>;
 
-  const handleBack = () => {router.back()}
+  const handleBack = () => {
+    router.back();
+  };
 
   const formattedDate = note.updatedAt
     ? `Updated at: ${note.updatedAt}`

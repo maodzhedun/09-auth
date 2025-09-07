@@ -3,6 +3,7 @@ import Link from 'next/link';
 import TagsMenu from '@/components/TagsMenu/TagsMenu';
 
 import css from './Header.module.css';
+import AuthNavigation from '../AuthNavigation/AuthNavigation';
 
 async function Header() {
   return (
@@ -21,6 +22,7 @@ async function Header() {
           <li>
             <TagsMenu />
           </li>
+          <AuthNavigation />
         </ul>
       </nav>
     </header>

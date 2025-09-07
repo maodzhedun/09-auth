@@ -1,13 +1,40 @@
+// app/(public routes)/sign-up/page.tsx
+
 'use client';
 
-import React, { use } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { register } from '@/lib/api/clientApi';
+import { RegisterRequest } from '@/types/user';
+import { useAuthStore } from '@/lib/store/authStore';
+
 import css from './SignUpPage.module.css';
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const [error, setError] = useState('');
+  const setUser = useAuthStore(state => state.setUser);
+
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      const formValue = Object.fromEntries(formData) as RegisterRequest;
+      const res = await register(formValue);
+      if (res) {
+        setUser(res);
+        router.push('/profile');
+      } else {
+        setError('Registration failed - Invalid email or password');
+      }
+    } catch (error) {
+      setError('An error occurred during registration');
+      console.error('Registration error:', error);
+    }
+  };
+
   return (
     <main className={css.mainContent}>
       <h1 className={css.formTitle}>Sign up</h1>
-      <form className={css.form}>
+      <form className={css.form} action={handleSubmit}>
         <div className={css.formGroup}>
           <label htmlFor="email">Email</label>
           <input
@@ -36,7 +63,7 @@ export default function SignUpPage() {
           </button>
         </div>
 
-        <p className={css.error}>Error</p>
+        {error && <p className={css.errorMessage}>{error}</p>}
       </form>
     </main>
   );

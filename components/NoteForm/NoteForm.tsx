@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
-import { createNote } from '@/lib/api';
+import { createNote } from '@/lib/api/clientApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNoteDraftStore } from '@/lib/store/noteStore';
 
@@ -91,7 +91,8 @@ export default function NoteForm() {
           className={css.input}
           placeholder="Enter a descriptive title (3-50 characters)"
           required
-          defaultValue={draft?.title} onChange={handleChange}
+          defaultValue={draft?.title}
+          onChange={handleChange}
         />
       </fieldset>
 
@@ -105,7 +106,8 @@ export default function NoteForm() {
           rows={8}
           className={css.textarea}
           placeholder="Write your note content here (max 500 characters)"
-          defaultValue={draft?.content} onChange={handleChange}
+          defaultValue={draft?.content}
+          onChange={handleChange}
         />
       </fieldset>
 
@@ -113,7 +115,14 @@ export default function NoteForm() {
         <label htmlFor="tag" className={css.label}>
           Tag *
         </label>
-        <select name="tag" id="tag" className={css.select} required defaultValue={draft?.tag} onChange={handleChange}>
+        <select
+          name="tag"
+          id="tag"
+          className={css.select}
+          required
+          defaultValue={draft?.tag}
+          onChange={handleChange}
+        >
           <option value="">-- Choose a category --</option>
           <option value="Todo">📝 Todo</option>
           <option value="Work">💼 Work</option>

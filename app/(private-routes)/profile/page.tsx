@@ -1,7 +1,11 @@
-import type { Metadata } from 'next';
-import React from 'react'
-import css from './Profile.module.css';
+//app(private-routes)/profile/page.tsx
 
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { getServerMe } from '@/lib/api/serverApi';
+import React from 'react';
+import css from './ProfilePage.module.css';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'NoteHub - Your Digital Note-Taking App',
@@ -40,38 +44,34 @@ export const metadata: Metadata = {
   },
 };
 
-const pageProfile = () => {
+const pageProfile = async () => {
+  const user = await getServerMe();
+
   return (
-  <main className={css.mainContent}>
-  <div className={css.profileCard}>
-      <div className={css.header}>
-	     <h1 className={css.formTitle}>Profile Page</h1>
-	     <a src="" className={css.editProfileButton}>
-	       Edit Profile
-	     </a>
-	   </div>
-     <div className={css.avatarWrapper}>
-      <img
-        src="Avatar"
-        alt="User Avatar"
-        width={120}
-        height={120}
-        className={css.avatar}
-      />
-    </div>
-    <div className={css.profileInfo}>
-      <p>
-        Username: your_username
-      </p>
-      <p>
-        Email: your_email@example.com
-      </p>
-    </div>
-  </div>
-</main>
+    <main className={css.mainContent}>
+      <div className={css.profileCard}>
+        <div className={css.header}>
+          <h1 className={css.formTitle}>Profile Page</h1>
+          <Link href="/profile/edit" className={css.editProfileButton}>
+            Edit Profile
+          </Link>
+        </div>
+        <div className={css.avatarWrapper}>
+          <Image
+            src={user.avatar}
+            alt="User Avatar"
+            width={120}
+            height={120}
+            className={css.avatar}
+          />
+        </div>
+        <div className={css.profileInfo}>
+          <p>Username: {user.username}</p>
+          <p>Email: {user.email}</p>
+        </div>
+      </div>
+    </main>
+  );
+};
 
-  )
-}
-
-
-export default pageProfile
+export default pageProfile;
