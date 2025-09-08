@@ -8,19 +8,23 @@ import React from 'react';
 import css from './EditProfilePage.module.css';
 import { getMe, updateMe } from '@/lib/api/clientApi';
 import Image from 'next/image';
+import { useAuthStore } from '@/lib/store/authStore';
 
 export default function EditProfile() {
   const [username, setuserName] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const { setUser } = useAuthStore();
 
   useEffect(() => {
-    getMe().then(user => {
-      setuserName(user.username ?? '');
-      setEmail(user.email ?? '');
-      setIsLoading(false);
-    }).catch(error => {
+    getMe()
+      .then(user => {
+        setuserName(user.username ?? '');
+        setEmail(user.email ?? '');
+        setIsLoading(false);
+      })
+      .catch(error => {
         console.error('Failed to fetch user data:', error);
         setIsLoading(false);
       });
@@ -33,7 +37,8 @@ export default function EditProfile() {
   const handleSaveUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await updateMe({ username });
+      const updateUser = await updateMe({ username });
+      setUser(updateUser); // Update user in global state
       router.push('/profile'); // Redirect to profile page after successful update
     } catch (error) {
       console.error('Failed to update user:', error);
@@ -86,8 +91,8 @@ export default function EditProfile() {
             <button type="submit" className={css.saveButton}>
               Save
             </button>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className={css.cancelButton}
               onClick={handleCancel}
             >
